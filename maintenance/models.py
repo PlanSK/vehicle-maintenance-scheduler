@@ -14,11 +14,16 @@ class Vehicle(models.Model):
         return ' '.join((self.vehicle_manufacturer, self.vehicle_model,
                          self.vehicle_body, str(self.vehicle_year)))
 
+    def save(self, *args, **kwargs):
+        self.vin_code = self.vin_code.upper()
+        super().save(*args, **kwargs)
+
 
 class Work(models.Model):
     class WorkType(models.TextChoices):
         REPAIR = 'REPAIR', 'Repair'
         MAINTENANCE = 'MAINTENANCE', 'Maintenance'
+        TUNING = 'TUNING', 'Tuning'
 
     work_type = models.CharField(
         max_length=20, choices=WorkType.choices, default=WorkType.MAINTENANCE,
@@ -30,7 +35,7 @@ class Work(models.Model):
 
 class Event(models.Model):
     vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE,
-                                related_name='vehicle', verbose_name='Vehicle')
+                                related_name='events', verbose_name='Vehicle')
     work_date = models.DateField(verbose_name='Event Date')
     mileage = models.IntegerField(verbose_name='Mileage')
     work = models.ForeignKey(Work, on_delete=models.PROTECT,
@@ -41,5 +46,8 @@ class Event(models.Model):
 
 
 class MileageEvent(models.Model):
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE,
+                                related_name='mileage_events',
+                                verbose_name='Vehicle')
     mileage_date = models.DateField(verbose_name='Mileage Date')
     mileage = models.IntegerField(verbose_name='Mileage')
