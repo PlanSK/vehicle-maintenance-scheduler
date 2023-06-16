@@ -6,7 +6,7 @@
   <div class="row justify-content-center">
     <div class="col col-md-6 col-sm-auto text-center">
       <h1>Vehicle list</h1>
-      <ul class="list-group">
+      <ul class="list-group mb-1">
         {% for vehicle in object_list %}
         <li class="list-group-item">
           <a href="{{ vehicle.get_absolute_url}}" class="link-primary">{{ vehicle }}</a>
@@ -17,9 +17,10 @@
         <li class="list-group-item">No data</li>
         {% endfor %}
       </ul>
-      <a href="{% url 'add_vehicle' %}" class="btn btn-primary mt-1">Add new vehicle</a>
+      <a href="{% url 'add_vehicle' %}" class="btn btn-primary">Add new vehicle</a>
       <a href="{% url 'list_of_works' %}" class="btn btn-secondary">List of works</a>
-      <a href="{% url 'events_list' %}" class="btn btn-success">Back to Events list</a>
+      <a href="{% url 'events_list' %}" class="btn btn-success">Events list</a>
+      <a href="{% url 'mileage_events_list' %}" class="btn btn-success">Mileage events list</a>
     </div>
   </div>
 </div>

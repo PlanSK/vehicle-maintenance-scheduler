@@ -74,3 +74,6 @@ class MileageEvent(models.Model):
                                 verbose_name='Vehicle')
     mileage_date = models.DateField(verbose_name='Mileage Date')
     mileage = models.IntegerField(verbose_name='Mileage')
+
+    def __str__(self) -> str:
+        return f'{self.mileage_date} {self.vehicle} ({self.mileage})'

@@ -39,4 +39,9 @@ urlpatterns = [
     path('delete_event/<int:pk>/', views.EventDeleteView.as_view(), name="delete_event"),
     path('events_list/', views.EventListView.as_view(), name="events_list"),
     path('event_detail/<int:pk>/', views.EventDetailView.as_view(), name="event_detail"),
+# Mileage events section
+    path('add_mileage/', views.MileageCreateView.as_view(), name="add_mileage"),
+    path('edit_mileage/<int:pk>/', views.MileageEditView.as_view(), name="edit_mileage"),
+    path('delete_mileage/<int:pk>/', views.MileageDeleteView.as_view(), name="delete_mileage"),
+    path('mileage_events_list/', views.MileageListView.as_view(), name="mileage_events_list"),
 ]

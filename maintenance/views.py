@@ -58,7 +58,8 @@ class VehicleDetailView(LoginRequiredMixin, TitleMixin, DetailView):
         return get_object_or_404(Vehicle, vin_code=self.kwargs['vin_code'])
 
 
-class WorkCreateView(LoginRequiredMixin, TitleMixin, CreateView):
+class WorkCreateView(LoginRequiredMixin, TitleMixin, SuccessUrlMixin,
+                     CreateView):
     model = Work
     fields = ['work_type', 'title', 'interval_month', 'interval_km']
     title = 'Add new work'
@@ -87,7 +88,8 @@ class WorkDetailView(LoginRequiredMixin, TitleMixin, DetailView):
     title = 'Work details'
 
 
-class EventCreateView(LoginRequiredMixin, TitleMixin, CreateView):
+class EventCreateView(LoginRequiredMixin, TitleMixin, SuccessUrlMixin,
+                      CreateView):
     model = Event
     fields = ['vehicle', 'work_date', 'mileage', 'work', 'part_price',
               'work_price', 'note']
@@ -116,3 +118,28 @@ class EventListView(LoginRequiredMixin, TitleMixin, ListView):
 class EventDetailView(LoginRequiredMixin, TitleMixin, DetailView):
     model = Event
     title = 'Event details'
+
+
+class MileageCreateView(LoginRequiredMixin, TitleMixin, SuccessUrlMixin,
+                        CreateView):
+    model = MileageEvent
+    fields = ['vehicle', 'mileage_date', 'mileage']
+    title = 'Add new mileage event'
+
+
+class MileageEditView(LoginRequiredMixin, TitleMixin, SuccessUrlMixin,
+                      UpdateView):
+    model = MileageEvent
+    fields = ['vehicle', 'mileage_date', 'mileage']
+    title = 'Edit mileage event'
+
+
+class MileageDeleteView(LoginRequiredMixin, SuccessUrlMixin, TitleMixin,
+                        DeleteView):
+    model = MileageEvent
+    title = 'Mileage event deletion'
+
+
+class MileageListView(LoginRequiredMixin, TitleMixin, ListView):
+    model = MileageEvent
+    title = 'Mileage Events list'
