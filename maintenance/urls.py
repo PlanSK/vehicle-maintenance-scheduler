@@ -20,6 +20,10 @@ from . import views
 
 
 urlpatterns = [
-    path('', views.index, name="index"),
+    path('', views.VehicleListView.as_view(), name="index"),
     path('login/', views.LoginUser.as_view(), name="login"),
+    path('add_vehicle/', views.VehicleCreateView.as_view(), name="add_vehicle"),
+    path('vehicle/<str:vin_code>/', views.VehicleDetailView.as_view(), name="vehicle_detail"),
+    path('edit_vehicle/<int:pk>/', views.VehicleEditView.as_view(), name="edit_vehicle"),
+    path('delete_vehicle/<int:pk>/', views.VehicleDeleteView.as_view(), name="delete_vehicle"),
 ]
