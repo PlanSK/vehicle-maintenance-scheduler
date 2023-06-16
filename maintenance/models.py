@@ -1,8 +1,14 @@
+from django.core.validators import RegexValidator
 from django.db import models
+from django.urls import reverse_lazy
 
 
 class Vehicle(models.Model):
-    vin_code = models.CharField(max_length=17, verbose_name='VIN')
+    vin_code = models.CharField(
+        max_length=17, verbose_name='VIN', unique=True,
+        validators=[
+            RegexValidator(regex=r'^[a-zA-Z0-9]{9}[a-zA-Z0-9-]{2}[0-9]{6}')
+        ])
     vehicle_manufacturer = models.CharField(max_length=50,
                                             verbose_name='Manufacturer')
     vehicle_model = models.CharField(max_length=20, verbose_name='Model')
@@ -17,6 +23,9 @@ class Vehicle(models.Model):
     def save(self, *args, **kwargs):
         self.vin_code = self.vin_code.upper()
         super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse_lazy('vehicle_detail', kwargs={'vin_code': self.vin_code})
 
 
 class Work(models.Model):
