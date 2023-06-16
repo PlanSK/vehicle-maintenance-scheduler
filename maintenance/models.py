@@ -25,7 +25,8 @@ class Vehicle(models.Model):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse_lazy('vehicle_detail', kwargs={'vin_code': self.vin_code})
+        return reverse_lazy('vehicle_detail',
+                            kwargs={'vin_code': self.vin_code})
 
 
 class Work(models.Model):
@@ -40,6 +41,12 @@ class Work(models.Model):
     title = models.CharField(max_length=255, verbose_name='Title')
     interval_month = models.IntegerField(verbose_name='Interval in month')
     interval_km = models.IntegerField(verbose_name='Interval in kilometers')
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse_lazy('work_detail', kwargs={'pk': self.pk})
 
 
 class Event(models.Model):

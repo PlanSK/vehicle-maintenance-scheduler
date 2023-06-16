@@ -11,7 +11,7 @@ from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from maintenance.mixins import TitleMixin, SuccessUrlMixin
-from maintenance.models import Vehicle
+from maintenance.models import Vehicle, Work, Event, MileageEvent
 
 
 class LoginUser(TitleMixin, SuccessUrlMixin, LoginView):
@@ -42,7 +42,7 @@ class VehicleEditView(LoginRequiredMixin, TitleMixin, SuccessUrlMixin,
 class VehicleDeleteView(LoginRequiredMixin, SuccessUrlMixin, TitleMixin,
                         DeleteView):
     model = Vehicle
-    title = 'Vehicle delete'
+    title = 'Vehicle deletion'
 
 
 class VehicleListView(LoginRequiredMixin, TitleMixin, ListView):
@@ -58,5 +58,30 @@ class VehicleDetailView(LoginRequiredMixin, TitleMixin, DetailView):
         return get_object_or_404(Vehicle, vin_code=self.kwargs['vin_code'])
 
 
-def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
+class WorkCreateView(LoginRequiredMixin, TitleMixin, CreateView):
+    model = Work
+    fields = ['work_type', 'title', 'interval_month', 'interval_km']
+    title = 'Add new work'
+
+
+class WorkEditView(LoginRequiredMixin, TitleMixin, SuccessUrlMixin,
+                      UpdateView):
+    model = Work
+    fields = ['work_type', 'title', 'interval_month', 'interval_km']
+    title = 'Edit work data'
+
+
+class WorkDeleteView(LoginRequiredMixin, SuccessUrlMixin, TitleMixin,
+                        DeleteView):
+    model = Work
+    title = 'Work deletion'
+
+
+class WorkListView(LoginRequiredMixin, TitleMixin, ListView):
+    model = Work
+    title = 'List of works'
+
+
+class WorkDetailView(LoginRequiredMixin, TitleMixin, DetailView):
+    model = Work
+    title = 'Work detail'
