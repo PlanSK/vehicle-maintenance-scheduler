@@ -1,0 +1,21 @@
+{% extends 'maintenance/logined_base.html' %}
+{% load static %}
+
+{% block container %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col col-md-6 col-sm-auto text-center">
+      <h1>Event details</h1>
+      <p class="text-start">
+        Vehicle: {{object.vehicle}}
+        Date: {{ object.work_date }}<br>
+        Mileage: {{ object.mileage }}<br>
+        Work: {{ object.work }}<br>
+        Part Price: {{ object.part_price }}<br>
+        Work Price: {{ object.work_price }}<br>
+        Note: {{ object.note }}
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

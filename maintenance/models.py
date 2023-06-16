@@ -58,7 +58,14 @@ class Event(models.Model):
                              related_name='work', verbose_name='Work title')
     part_price = models.FloatField(verbose_name='Part price', default=0.0)
     work_price = models.FloatField(verbose_name='Work price', default=0.0)
-    note = models.CharField(max_length=255, verbose_name='Note')
+    note = models.CharField(max_length=255, verbose_name='Note', null=True,
+                            blank=True)
+
+    def __str__(self):
+        return f'{self.work_date} {self.work} ({self.mileage})'
+
+    def get_absolute_url(self):
+        return reverse_lazy('event_detail', kwargs={'pk': self.pk})
 
 
 class MileageEvent(models.Model):

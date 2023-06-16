@@ -52,7 +52,7 @@ class VehicleListView(LoginRequiredMixin, TitleMixin, ListView):
 
 class VehicleDetailView(LoginRequiredMixin, TitleMixin, DetailView):
     model = Vehicle
-    title = 'Vehicle detail'
+    title = 'Vehicle details'
 
     def get_object(self, queryset: QuerySet[Any] | None = None) -> Vehicle:
         return get_object_or_404(Vehicle, vin_code=self.kwargs['vin_code'])
@@ -84,4 +84,35 @@ class WorkListView(LoginRequiredMixin, TitleMixin, ListView):
 
 class WorkDetailView(LoginRequiredMixin, TitleMixin, DetailView):
     model = Work
-    title = 'Work detail'
+    title = 'Work details'
+
+
+class EventCreateView(LoginRequiredMixin, TitleMixin, CreateView):
+    model = Event
+    fields = ['vehicle', 'work_date', 'mileage', 'work', 'part_price',
+              'work_price', 'note']
+    title = 'Add new event'
+
+
+class EventEditView(LoginRequiredMixin, TitleMixin, SuccessUrlMixin,
+                      UpdateView):
+    model = Event
+    fields = ['vehicle', 'work_date', 'mileage', 'work', 'part_price',
+              'work_price', 'note']
+    title = 'Edit event data'
+
+
+class EventDeleteView(LoginRequiredMixin, SuccessUrlMixin, TitleMixin,
+                        DeleteView):
+    model = Event
+    title = 'Event deletion'
+
+
+class EventListView(LoginRequiredMixin, TitleMixin, ListView):
+    model = Event
+    title = 'Events list'
+
+
+class EventDetailView(LoginRequiredMixin, TitleMixin, DetailView):
+    model = Event
+    title = 'Event details'

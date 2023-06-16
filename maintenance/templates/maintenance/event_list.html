@@ -1,0 +1,24 @@
+{% extends 'maintenance/logined_base.html' %}
+{% load static %}
+
+{% block container %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col col-md-6 col-sm-auto text-center">
+      <h1>Evenets list</h1>
+      <ul class="list-group">
+        {% for event in object_list %}
+        <li class="list-group-item">
+          <a href="{{ event.get_absolute_url}}" class="link-primary">{{ event }}</a>
+          <a href="{% url 'edit_event' pk=event.pk %}?next={{request.path}}" class="btn btn-primary btn-sm">edit</a>
+          <a href="{% url 'delete_event' pk=event.pk %}?next={{request.path}}" class="btn btn-danger btn-sm">delete</a>
+        </li>
+        {% empty %}
+        <li class="list-group-item">No data</li>
+        {% endfor %}
+      </ul>
+      <a href="{% url 'add_event' %}" class="btn btn-primary mt-1">Add new event</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

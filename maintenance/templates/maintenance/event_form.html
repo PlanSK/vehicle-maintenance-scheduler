@@ -6,13 +6,12 @@
 <div class="container">
   <div class="row justify-content-center">
     <div class="col col-md-6 border rounded text-center">
+      <h1>Event edit</h1>
       <form method="post">
-        <p class="text-center">Work deletion.</p>
         {% csrf_token %}
-        <p>Are you sure you want to delete the work "{{object}}"?</p>
-        {{ form }}
+        {{ form|crispy }}
         <div class="m-6 d-flex justify-content-center">
-          <button type="submit" class="btn btn-primary mb-4 me-2">Delete</button>
+          <button type="submit" class="btn btn-primary mb-4 me-2">Save</button>
           <div>
             <a class="btn btn-outline-secondary" onclick="history.back()">Back</a>
           </div>

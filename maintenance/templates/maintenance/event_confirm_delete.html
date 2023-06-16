@@ -7,9 +7,9 @@
   <div class="row justify-content-center">
     <div class="col col-md-6 border rounded text-center">
       <form method="post">
-        <p class="text-center">Work deletion.</p>
+        <p class="text-center">Event deletion.</p>
         {% csrf_token %}
-        <p>Are you sure you want to delete the work "{{object}}"?</p>
+        <p>Are you sure you want to delete the event "{{object}}"?</p>
         {{ form }}
         <div class="m-6 d-flex justify-content-center">
           <button type="submit" class="btn btn-primary mb-4 me-2">Delete</button>
