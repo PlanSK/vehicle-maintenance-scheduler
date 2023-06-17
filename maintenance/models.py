@@ -16,11 +16,11 @@ class Vehicle(models.Model):
     vehicle_year = models.IntegerField(verbose_name='Year')
     vehicle_mileage = models.IntegerField(verbose_name='Mileage')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return ' '.join((self.vehicle_manufacturer, self.vehicle_model,
                          self.vehicle_body, str(self.vehicle_year)))
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
         self.vin_code = self.vin_code.upper()
         super().save(*args, **kwargs)
 
@@ -42,7 +42,7 @@ class Work(models.Model):
     interval_month = models.IntegerField(verbose_name='Interval in month')
     interval_km = models.IntegerField(verbose_name='Interval in kilometers')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.title
 
     def get_absolute_url(self):
@@ -61,11 +61,16 @@ class Event(models.Model):
     note = models.CharField(max_length=255, verbose_name='Note', null=True,
                             blank=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.work_date} {self.work} ({self.mileage})'
 
     def get_absolute_url(self):
         return reverse_lazy('event_detail', kwargs={'pk': self.pk})
+
+    def save(self, *args, **kwargs) -> None:
+        self.vehicle.vehicle_mileage = self.mileage
+        self.vehicle.save()
+        return super().save(*args, **kwargs)
 
 
 class MileageEvent(models.Model):
@@ -77,3 +82,8 @@ class MileageEvent(models.Model):
 
     def __str__(self) -> str:
         return f'{self.mileage_date} {self.vehicle} ({self.mileage})'
+    
+    def save(self, *args, **kwargs) -> None:
+        self.vehicle.vehicle_mileage = self.mileage
+        self.vehicle.save()
+        return super().save(*args, **kwargs)

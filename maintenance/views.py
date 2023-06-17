@@ -1,4 +1,5 @@
 from typing import Any, Optional
+
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
@@ -9,9 +10,11 @@ from django.shortcuts import get_object_or_404
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.utils import timezone
 
 from maintenance.mixins import TitleMixin, SuccessUrlMixin
 from maintenance.models import Vehicle, Work, Event, MileageEvent
+from maintenance.forms import EventForm, MileageEventForm
 
 
 class LoginUser(TitleMixin, SuccessUrlMixin, LoginView):
@@ -91,9 +94,15 @@ class WorkDetailView(LoginRequiredMixin, TitleMixin, DetailView):
 class EventCreateView(LoginRequiredMixin, TitleMixin, SuccessUrlMixin,
                       CreateView):
     model = Event
-    fields = ['vehicle', 'work_date', 'mileage', 'work', 'part_price',
-              'work_price', 'note']
+    form_class = EventForm
     title = 'Add new event'
+
+    def get_initial(self):
+        vehicle = get_object_or_404(Vehicle, vin_code=self.kwargs['vin_code'])
+        return {
+            'vehicle': vehicle,
+            'work_date': timezone.now(),
+        }
 
 
 class EventEditView(LoginRequiredMixin, TitleMixin, SuccessUrlMixin,
@@ -123,8 +132,15 @@ class EventDetailView(LoginRequiredMixin, TitleMixin, DetailView):
 class MileageCreateView(LoginRequiredMixin, TitleMixin, SuccessUrlMixin,
                         CreateView):
     model = MileageEvent
-    fields = ['vehicle', 'mileage_date', 'mileage']
+    form_class = MileageEventForm
     title = 'Add new mileage event'
+    
+    def get_initial(self):
+        vehicle = get_object_or_404(Vehicle, vin_code=self.kwargs['vin_code'])
+        return {
+            'vehicle': vehicle,
+            'mileage_date': timezone.now(),
+        }
 
 
 class MileageEditView(LoginRequiredMixin, TitleMixin, SuccessUrlMixin,

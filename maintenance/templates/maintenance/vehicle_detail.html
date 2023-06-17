@@ -6,10 +6,15 @@
   <div class="row justify-content-center">
     <div class="col col-md-6 col-sm-auto text-center">
       <h1>Vehicle detail</h1>
-      <p class="text-start">
+      <p class="text-start" class="mb-1">
         Vehicle: {{ object }}<br>
-        VIN: {{object.vin_code}}
+        VIN: {{object.vin_code}}<br>
+        Mileage: {{object.vehicle_mileage}}
       </p>
+      <a href="{% url 'add_event' vin_code=object.vin_code %}?next={{request.path}}" class="btn btn-primary">Add new event</a>
+      <a href="{% url 'add_mileage' vin_code=object.vin_code %}?next={{request.path}}" class="btn btn-primary">Add new mileage event</a>
+      <a href="{% url 'events_list' %}" class="btn btn-success">Events list</a>
+      <a href="{% url 'mileage_events_list' %}" class="btn btn-success">Mileage events list</a> 
     </div>
   </div>
 </div>
