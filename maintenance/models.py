@@ -39,8 +39,11 @@ class Work(models.Model):
         max_length=20, choices=WorkType.choices, default=WorkType.MAINTENANCE,
         verbose_name='Work Type')
     title = models.CharField(max_length=255, verbose_name='Title')
-    interval_month = models.IntegerField(verbose_name='Interval in month')
-    interval_km = models.IntegerField(verbose_name='Interval in kilometers')
+    interval_month = models.IntegerField(verbose_name='Interval in month',
+                                         null=True, blank=True)
+    interval_km = models.IntegerField(verbose_name='Interval in kilometers',
+                                      null=True, blank=True)
+    note = models.CharField(max_length=255, verbose_name='Note', blank=True)
 
     def __str__(self) -> str:
         return self.title
@@ -58,8 +61,7 @@ class Event(models.Model):
                              related_name='work', verbose_name='Work title')
     part_price = models.FloatField(verbose_name='Part price', default=0.0)
     work_price = models.FloatField(verbose_name='Work price', default=0.0)
-    note = models.CharField(max_length=255, verbose_name='Note', null=True,
-                            blank=True)
+    note = models.CharField(max_length=255, verbose_name='Note', blank=True)
 
     def __str__(self) -> str:
         return f'{self.work_date} {self.work} ({self.mileage})'
