@@ -27,6 +27,9 @@
         <li class="list-group-item">No data</li>
         {% endfor %}
       </ul>
+      {% if request.GET.next %}
+      <a class="btn btn-outline-secondary mt-1" href="{{ request.GET.next }}">Back</a>
+      {% endif %}
     </div>
   </div>
 </div>

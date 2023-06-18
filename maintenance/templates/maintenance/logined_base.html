@@ -5,6 +5,14 @@
 {% block body %}
 <body>
   <main>
+    <nav class="navbar bg-body-tertiary mb-1">
+      <div class="container">
+        <a class="navbar-brand" href="{% url 'index' %}">
+          <img src="{% static 'maintenance/img/logo.png' %}" alt="Logo" width="30">
+          Vehicle maintenance scheduler
+        </a>
+      </div>
+    </nav>
     {% block container %}
     {% endblock %}
   </main>
