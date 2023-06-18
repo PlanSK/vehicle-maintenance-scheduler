@@ -1,16 +1,13 @@
-from typing import Any, Optional
+import datetime
+from typing import Any
 
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
-from django.db import models
 from django.db.models.query import QuerySet
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.utils import timezone
 
 from maintenance.mixins import TitleMixin, SuccessUrlMixin
 from maintenance.models import Vehicle, Work, Event, MileageEvent
@@ -110,7 +107,8 @@ class EventCreateView(LoginRequiredMixin, TitleMixin, SuccessUrlMixin,
         vehicle = get_object_or_404(Vehicle, vin_code=self.kwargs['vin_code'])
         return {
             'vehicle': vehicle,
-            'work_date': timezone.now(),
+            'work_date': datetime.date.today().strftime('%Y-%m-%d'),
+            'mileage': vehicle.vehicle_mileage,
         }
 
 
@@ -148,7 +146,8 @@ class MileageCreateView(LoginRequiredMixin, TitleMixin, SuccessUrlMixin,
         vehicle = get_object_or_404(Vehicle, vin_code=self.kwargs['vin_code'])
         return {
             'vehicle': vehicle,
-            'mileage_date': timezone.now(),
+            'mileage_date': datetime.date.today().strftime('%Y-%m-%d'),
+            'mileage': vehicle.vehicle_mileage,
         }
 
 
