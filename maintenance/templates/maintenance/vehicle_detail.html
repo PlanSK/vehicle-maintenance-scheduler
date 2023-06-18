@@ -36,16 +36,19 @@
         <i class="fa-solid fa-screwdriver-wrench me-3"></i>&nbsp;
         <div>
           {{planed_work.work}}<br>
-          {% if planed_work.trigger == "MILEAGE" %}
-          should have been changed <span class="badge bg-danger">{{planed_work.mileage_delta|abs}} km</span> ago.
-          {% elif planed_work.trigger == "DATE" %}
-          will need to be changed <span class="badge bg-danger">{{planed_work.mileage_delta}} km</span>
-          should have been changed <span class="badge bg-warning">{{planed_work.limit_date}}</span>.
+          {% if planed_work.trigger == planed_work.trigger.MILEAGE %}
+            should have been changed <span class="badge bg-danger">{{planed_work.mileage_delta|abs}} km</span> ago 
+            {% if planed_work.date_delta.days > 0  %}
+            and by time <span class="badge bg-danger">{{planed_work.date_delta.days}} days ago ({{planed_work.planed_date}})</span>
+            {% endif %}
+          {% elif planed_work.trigger == planed_work.trigger.DATE %}
+            should have been changed <span class="badge bg-danger">{{planed_work.date_delta.days}} days ago ({{planed_work.planed_date}})</span> 
+            mileage remainder <span class="badge bg-success">{{planed_work.mileage_delta}} km</span>
           {% else %}
-          will need to be changed
-          <span class="badge bg-success">{{planed_work.planed_mileage}} km</span>
-          or
-          <span class="badge bg-success">{{planed_work.planed_date}}</span>
+            will need to be changed
+            <span class="badge bg-success">{{planed_work.planed_mileage}} km</span>
+            or
+            <span class="badge bg-success">{{planed_work.planed_date}}</span>
           {% endif %}
         </div>
       </div>

@@ -63,6 +63,9 @@ class Event(models.Model):
     work_price = models.FloatField(verbose_name='Work price', default=0.0)
     note = models.CharField(max_length=255, verbose_name='Note', blank=True)
 
+    class Meta:
+        ordering = ['-work_date']
+
     def __str__(self) -> str:
         return f'{self.work_date} {self.work} ({self.mileage})'
 

@@ -32,7 +32,7 @@ def get_maintenance_limits(vin_code: str) -> list[PlanedWork]:
     
     for current_work in Work.objects.all():
         last_event: Event = vehicle_events.filter(
-            work=current_work).order_by('-work_date').last()
+            work=current_work).order_by('-work_date').first()
         if not last_event:
             continue
         limit_mileage = last_event.mileage + current_work.interval_km
@@ -51,7 +51,7 @@ def get_maintenance_limits(vin_code: str) -> list[PlanedWork]:
                 planed_mileage=limit_mileage,
                 mileage_delta=limit_mileage - current_vehicle.vehicle_mileage,
                 planed_date=limit_date,
-                date_delta=limit_date - last_event.work_date
+                date_delta=timezone.now().date() - limit_date
             )
         )
 
