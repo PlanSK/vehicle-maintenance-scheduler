@@ -5,13 +5,22 @@
 <div class="container">
   <div class="row justify-content-center">
     <div class="col col-md-6 col-sm-auto text-center">
-      <h1>Evenets list</h1>
+      <h3>Evenets list</h3>
       <ul class="list-group">
         {% for event in object_list %}
-        <li class="list-group-item">
-          <a href="{{ event.get_absolute_url}}" class="link-primary">{{ event }}</a>
-          <a href="{% url 'edit_event' pk=event.pk %}?next={{request.path}}" class="btn btn-primary btn-sm">edit</a>
-          <a href="{% url 'delete_event' pk=event.pk %}?next={{request.path}}" class="btn btn-danger btn-sm">delete</a>
+        <li class="list-group-item text-start" style="font-size: 0.8rem;">
+          <div class="row">
+            <div class="col">
+              <i class="fa-solid fa-screwdriver-wrench"></i>
+              <b>{{ event.work_date|date:"d.m.Y" }}</b>
+              <span class="badge bg-secondary">{{ event.mileage }} km</span>
+              {{ event.work }}
+            </div>
+            <div class="col col-auto">
+              <a href="{% url 'edit_event' pk=event.pk %}?next={{request.path}}" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-pen-to-square"></i> edit</a>
+              <a href="{% url 'delete_event' pk=event.pk %}?next={{request.path}}" class="btn btn-outline-danger btn-sm"><i class="fa-regular fa-circle-xmark"></i> delete</a>
+            </div>
+          </div>
         </li>
         {% empty %}
         <li class="list-group-item">No data</li>

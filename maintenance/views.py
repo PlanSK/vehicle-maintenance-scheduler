@@ -15,6 +15,8 @@ from django.utils import timezone
 from maintenance.mixins import TitleMixin, SuccessUrlMixin
 from maintenance.models import Vehicle, Work, Event, MileageEvent
 from maintenance.forms import EventForm, MileageEventForm
+from maintenance.services.maintenance import (get_maintenance_limits,
+                                              WorkTrigger)
 
 
 class LoginUser(TitleMixin, SuccessUrlMixin, LoginView):
@@ -51,7 +53,7 @@ class VehicleDeleteView(LoginRequiredMixin, SuccessUrlMixin, TitleMixin,
 class VehicleListView(LoginRequiredMixin, TitleMixin, ListView):
     model = Vehicle
     title = 'Vehicle list'
-    
+
 
 class VehicleDetailView(LoginRequiredMixin, TitleMixin, DetailView):
     model = Vehicle
@@ -59,6 +61,13 @@ class VehicleDetailView(LoginRequiredMixin, TitleMixin, DetailView):
 
     def get_object(self, queryset: QuerySet[Any] | None = None) -> Vehicle:
         return get_object_or_404(Vehicle, vin_code=self.kwargs['vin_code'])
+    
+    def get_context_data(self, **kwargs):
+        context: dict = super().get_context_data(**kwargs)
+        context.update({
+            'planed_works': get_maintenance_limits(self.object.vin_code),
+        })
+        return context
 
 
 class WorkCreateView(LoginRequiredMixin, TitleMixin, SuccessUrlMixin,

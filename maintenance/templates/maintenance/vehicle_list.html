@@ -4,21 +4,29 @@
 {% block container %}
 <div class="container">
   <div class="row justify-content-center">
-    <div class="col col-md-6 col-sm-auto text-center">
-      <h1>Vehicle list</h1>
-      <ul class="list-group mb-1">
-        {% for vehicle in object_list %}
-        <li class="list-group-item">
+    <div class="col col-auto text-center">
+      <img src="{% static 'maintenance/img/logo.png' %}" alt="" height="40">
+      <h3>Vehicle maintenance scheduler</h3>
+      {% for vehicle in object_list %}
+      <div class="card border-primary mb-3">
+        <div class="card-header">
+          <img src="{% static 'maintenance/img/car-svgrepo-com.svg'%}" alt="car icon" width="20px" style="filter: invert(1);"/>&nbsp;
           <a href="{{ vehicle.get_absolute_url}}" class="link-primary">{{ vehicle }}</a>
-          <a href="{% url 'edit_vehicle' pk=vehicle.pk %}?next={{request.path}}" class="btn btn-primary btn-sm">edit</a>
-          <a href="{% url 'delete_vehicle' pk=vehicle.pk %}?next={{request.path}}" class="btn btn-danger btn-sm">delete</a>
-        </li>
-        {% empty %}
-        <li class="list-group-item">No data</li>
-        {% endfor %}
-      </ul>
-      <a href="{% url 'add_vehicle' %}" class="btn btn-primary">Add new vehicle</a>
-      <a href="{% url 'list_of_works' %}" class="btn btn-secondary">List of works</a>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{ vehicle }}</h5>
+          <p class="card-text text-start">
+            VIN: {{vehicle.vin_code}}<br>
+            Events count: {{vehicle.events.count}}<br>
+            Mileage: {{vehicle.vehicle_mileage}}
+          </p>
+          <a href="{% url 'edit_vehicle' pk=vehicle.pk %}?next={{request.path}}" class="btn btn-outline-warning btn-sm"><i class="fa-solid fa-pen-to-square"></i> edit</a>
+        <a href="{% url 'delete_vehicle' pk=vehicle.pk %}?next={{request.path}}" class="btn btn-outline-danger btn-sm"><i class="fa-regular fa-circle-xmark"></i> delete</a>
+        </div>
+      </div>
+      {% endfor %}
+      <a href="{% url 'add_vehicle' %}" class="btn btn-outline-primary"><i class="fa-solid fa-plus"></i> Add new vehicle</a>
+      <a href="{% url 'list_of_works' %}" class="btn btn-outline-secondary"><i class="fa-solid fa-screwdriver-wrench"></i> List of works</a>
     </div>
   </div>
 </div>
