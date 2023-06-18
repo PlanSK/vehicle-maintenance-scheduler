@@ -1,5 +1,6 @@
 {% extends 'maintenance/logined_base.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block container %}
 <div class="container">
@@ -11,10 +12,10 @@
         <li class="list-group-item text-start" style="font-size: 0.8rem;">
           <div class="row">
             <div class="col">
-              <i class="fa-solid fa-screwdriver-wrench"></i>
-              <b>{{ event.work_date|date:"d.m.Y" }}</b>
-              <span class="badge bg-secondary">{{ event.mileage }} km</span>
-              {{ event.work }}
+              <i class="fa-solid fa-screwdriver-wrench"></i> {{ event.work }}<br>
+              <span class="pe-3">{{ event.work_date|date:"d.m.Y" }}</span>
+              <span class="badge bg-secondary me-3">{{ event.mileage|intcomma }} km</span>
+              {{event.part_price|add:event.work_price|intcomma}} руб.
             </div>
             <div class="col col-auto">
               <a href="{% url 'edit_event' pk=event.pk %}?next={{request.path}}" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-pen-to-square"></i> edit</a>
