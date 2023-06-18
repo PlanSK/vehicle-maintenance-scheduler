@@ -70,8 +70,9 @@ class Event(models.Model):
         return reverse_lazy('event_detail', kwargs={'pk': self.pk})
 
     def save(self, *args, **kwargs) -> None:
-        self.vehicle.vehicle_mileage = self.mileage
-        self.vehicle.save()
+        if self.mileage > self.vehicle.vehicle_mileage:
+            self.vehicle.vehicle_mileage = self.mileage 
+            self.vehicle.save()
         return super().save(*args, **kwargs)
 
 
@@ -86,6 +87,7 @@ class MileageEvent(models.Model):
         return f'{self.mileage_date} {self.vehicle} ({self.mileage})'
     
     def save(self, *args, **kwargs) -> None:
-        self.vehicle.vehicle_mileage = self.mileage
-        self.vehicle.save()
+        if self.mileage > self.vehicle.vehicle_mileage:
+            self.vehicle.vehicle_mileage = self.mileage 
+            self.vehicle.save()
         return super().save(*args, **kwargs)
