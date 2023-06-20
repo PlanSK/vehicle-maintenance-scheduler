@@ -110,6 +110,9 @@ class WorkPattern(models.Model):
     interval_km = models.IntegerField(verbose_name='Interval in kilometers',
                                       null=True, blank=True)
 
+    def __str__(self) -> str:
+        return self.title
+
 
 @receiver(post_save, sender=Vehicle)
 def create_works_list_from_patterns(sender, instance, created=None, **kwargs):
