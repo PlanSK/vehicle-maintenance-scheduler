@@ -28,10 +28,10 @@ urlpatterns = [
     path('edit_vehicle/<int:pk>/', views.VehicleEditView.as_view(), name="edit_vehicle"),
     path('delete_vehicle/<int:pk>/', views.VehicleDeleteView.as_view(), name="delete_vehicle"),
 # Work section
-    path('add_work/', views.WorkCreateView.as_view(), name="add_work"),
+    path('add_work/<str:vin_code>/', views.WorkCreateView.as_view(), name="add_work"),
     path('edit_work/<int:pk>/', views.WorkEditView.as_view(), name="edit_work"),
     path('delete_work/<int:pk>/', views.WorkDeleteView.as_view(), name="delete_work"),
-    path('list_of_works/', views.WorkListView.as_view(), name="list_of_works"),
+    path('list_of_works/<str:vin_code>/', views.WorkListView.as_view(), name="list_of_works"),
     path('work_detail/<int:pk>/', views.WorkDetailView.as_view(), name="work_detail"),
 # Event section
     path('add_event/<str:vin_code>/', views.EventCreateView.as_view(), name="add_event"),

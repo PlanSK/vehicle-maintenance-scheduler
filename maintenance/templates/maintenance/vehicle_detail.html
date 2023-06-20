@@ -60,6 +60,7 @@
   <div class="row">
     <div class="col text-center">
       <a href="{% url 'events_list' %}?next={{request.path}}" class="btn btn-outline-success btn-sm"><i class="fa-solid fa-book"></i> See all events list</a>
+      <a href="{% url 'list_of_works' vin_code=object.vin_code %}" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-screwdriver-wrench"></i> List of works</a>
       <a href="{% url 'index' %}" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-list"></i> Back to vehicle list</a>
     </div>
   </div>

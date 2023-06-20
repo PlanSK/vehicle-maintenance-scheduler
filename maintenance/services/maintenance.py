@@ -30,7 +30,9 @@ def get_maintenance_limits(vin_code: str) -> list[PlanedWork]:
     vehicle_events = current_vehicle.events.all()
     worklist = []
 
-    for current_work in Work.objects.all():
+    for current_work in Work.objects.filter(
+            vehicle__vin_code=vin_code,
+            work_type=Work.WorkType.MAINTENANCE):
         last_event: Event = vehicle_events.filter(
             work=current_work).order_by('-work_date').first()
         if (not last_event or not current_work.interval_km

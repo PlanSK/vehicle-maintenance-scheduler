@@ -26,7 +26,7 @@
         <li class="list-group-item">No data</li>
         {% endfor %}
       </ul>
-      <a href="{% url 'add_work' %}?next={{request.path}}" class="btn btn-primary mt-1">Add new work</a>
+      <a href="{% url 'add_work' vin_code=view.kwargs.vin_code %}?next={{request.path}}" class="btn btn-primary mt-1">Add new work</a>
     </div>
   </div>
 </div>

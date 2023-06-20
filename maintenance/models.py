@@ -1,9 +1,12 @@
+from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django.db import models
 from django.urls import reverse_lazy
 
 
 class Vehicle(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE,
+                              related_name='vehicles')
     vin_code = models.CharField(
         max_length=17, verbose_name='VIN', unique=True,
         validators=[
@@ -35,6 +38,8 @@ class Work(models.Model):
         MAINTENANCE = 'MAINTENANCE', 'Maintenance'
         TUNING = 'TUNING', 'Tuning'
 
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE,
+                                related_name='works_list')
     work_type = models.CharField(
         max_length=20, choices=WorkType.choices, default=WorkType.MAINTENANCE,
         verbose_name='Work Type')
@@ -57,7 +62,7 @@ class Event(models.Model):
                                 related_name='events', verbose_name='Vehicle')
     work_date = models.DateField(verbose_name='Event Date')
     mileage = models.IntegerField(verbose_name='Mileage')
-    work = models.ForeignKey(Work, on_delete=models.PROTECT,
+    work = models.ForeignKey(Work, on_delete=models.CASCADE,
                              related_name='work', verbose_name='Work title')
     part_price = models.FloatField(verbose_name='Part price', default=0.0)
     work_price = models.FloatField(verbose_name='Work price', default=0.0)

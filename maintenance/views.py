@@ -11,9 +11,9 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from maintenance.mixins import TitleMixin, SuccessUrlMixin
 from maintenance.models import Vehicle, Work, Event, MileageEvent
-from maintenance.forms import EventForm, MileageEventForm
-from maintenance.services.maintenance import (get_maintenance_limits,
-                                              WorkTrigger)
+from maintenance.forms import (EventForm, MileageEventForm, VehicleForm,
+                               WorkForm)
+from maintenance.services.maintenance import get_maintenance_limits
 
 
 class LoginUser(TitleMixin, SuccessUrlMixin, LoginView):
@@ -24,11 +24,13 @@ class LoginUser(TitleMixin, SuccessUrlMixin, LoginView):
 
 class VehicleCreateView(LoginRequiredMixin, TitleMixin, CreateView):
     model = Vehicle
-    fields = [
-        'vehicle_manufacturer', 'vehicle_model', 'vehicle_body',
-        'vehicle_year', 'vehicle_mileage', 'vin_code',
-    ]
+    form_class = VehicleForm
     title = 'Add new vehicle'
+
+    def get_initial(self):
+        return {
+            'owner': self.request.user,
+        }
 
 
 class VehicleEditView(LoginRequiredMixin, TitleMixin, SuccessUrlMixin,
@@ -51,6 +53,9 @@ class VehicleListView(LoginRequiredMixin, TitleMixin, ListView):
     model = Vehicle
     title = 'Vehicle list'
 
+    def get_queryset(self) -> QuerySet[Any]:
+        return super().get_queryset().filter(owner=self.request.user)
+
 
 class VehicleDetailView(LoginRequiredMixin, TitleMixin, DetailView):
     model = Vehicle
@@ -70,14 +75,20 @@ class VehicleDetailView(LoginRequiredMixin, TitleMixin, DetailView):
 class WorkCreateView(LoginRequiredMixin, TitleMixin, SuccessUrlMixin,
                      CreateView):
     model = Work
-    fields = ['work_type', 'title', 'interval_month', 'interval_km']
+    form_class = WorkForm
     title = 'Add new work'
+
+    def get_initial(self):
+        vehicle = get_object_or_404(Vehicle, vin_code=self.kwargs['vin_code'])
+        return {
+            'vehicle': vehicle,
+        }
 
 
 class WorkEditView(LoginRequiredMixin, TitleMixin, SuccessUrlMixin,
                       UpdateView):
     model = Work
-    fields = ['work_type', 'title', 'interval_month', 'interval_km']
+    form_class = WorkForm
     title = 'Edit work data'
 
 
@@ -90,6 +101,10 @@ class WorkDeleteView(LoginRequiredMixin, SuccessUrlMixin, TitleMixin,
 class WorkListView(LoginRequiredMixin, TitleMixin, ListView):
     model = Work
     title = 'List of works'
+
+    def get_queryset(self) -> QuerySet[Any]:
+        return super().get_queryset().filter(
+            vehicle__vin_code=self.kwargs['vin_code'])
 
 
 class WorkDetailView(LoginRequiredMixin, TitleMixin, DetailView):
