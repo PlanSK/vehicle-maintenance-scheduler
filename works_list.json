@@ -1,0 +1,119 @@
+[
+{
+  "model": "maintenance.workpattern",
+  "pk": 1,
+  "fields": {
+    "title": "Замена моторного масла и маслянного фильтра",
+    "interval_month": 12,
+    "interval_km": 5000
+  }
+},
+{
+  "model": "maintenance.workpattern",
+  "pk": 2,
+  "fields": {
+    "title": "Замена воздушного фильтра",
+    "interval_month": 12,
+    "interval_km": 15000
+  }
+},
+{
+  "model": "maintenance.workpattern",
+  "pk": 3,
+  "fields": {
+    "title": "Замена салонного фильтра",
+    "interval_month": 12,
+    "interval_km": 5000
+  }
+},
+{
+  "model": "maintenance.workpattern",
+  "pk": 4,
+  "fields": {
+    "title": "Регулировка клапанов",
+    "interval_month": 36,
+    "interval_km": 45000
+  }
+},
+{
+  "model": "maintenance.workpattern",
+  "pk": 5,
+  "fields": {
+    "title": "Замена топливного фильтра",
+    "interval_month": 72,
+    "interval_km": 90000
+  }
+},
+{
+  "model": "maintenance.workpattern",
+  "pk": 6,
+  "fields": {
+    "title": "Замена свечей зажигания (иридиевые)",
+    "interval_month": 96,
+    "interval_km": 120000
+  }
+},
+{
+  "model": "maintenance.workpattern",
+  "pk": 7,
+  "fields": {
+    "title": "Замена антифриза",
+    "interval_month": 60,
+    "interval_km": 100000
+  }
+},
+{
+  "model": "maintenance.workpattern",
+  "pk": 8,
+  "fields": {
+    "title": "Замена жидкости в трансмиссии (АТ)",
+    "interval_month": 36,
+    "interval_km": 45000
+  }
+},
+{
+  "model": "maintenance.workpattern",
+  "pk": 9,
+  "fields": {
+    "title": "Замена тормозной жидкости",
+    "interval_month": 36,
+    "interval_km": 45000
+  }
+},
+{
+  "model": "maintenance.workpattern",
+  "pk": 10,
+  "fields": {
+    "title": "Замена жидкости ГУР",
+    "interval_month": 36,
+    "interval_km": 45000
+  }
+},
+{
+  "model": "maintenance.workpattern",
+  "pk": 11,
+  "fields": {
+    "title": "Проверка, регулировка углов установки колес",
+    "interval_month": 12,
+    "interval_km": 15000
+  }
+},
+{
+  "model": "maintenance.workpattern",
+  "pk": 12,
+  "fields": {
+    "title": "Чистка, смазка направляющих тормозных суппортов",
+    "interval_month": 24,
+    "interval_km": 30000
+  }
+},
+{
+  "model": "maintenance.workpattern",
+  "pk": 13,
+  "fields": {
+    "title": "Промывка топливных форсунок системы впрыска",
+    "interval_month": 24,
+    "interval_km": 30000
+  }
+}
+]

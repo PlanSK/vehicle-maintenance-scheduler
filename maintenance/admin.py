@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from maintenance.models import Vehicle, WorkPattern
+
+
+admin.site.register(Vehicle)
+admin.site.register(WorkPattern)

@@ -1,0 +1,36 @@
+{% extends 'maintenance/logined_base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block container %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col col-md-6 col-sm-auto text-center">
+      <h3>List of works</h3>
+      <ul class="list-group">
+        {% for work in object_list %}
+        <li class="list-group-item text-start" style="font-size: 0.8rem;">
+          <div class="row">
+            <div class="col">
+              <h6><i class="fa-solid fa-screwdriver-wrench"></i> {{ work }}</h6><br>
+              <span class="pe-3">Month interval: <b>{{ work.interval_month }}</b> m</span>
+              Mileage: every <b>{{ work.interval_km|intcomma }}</b> km
+              {% if work.note %}
+              <br>Notes: <b>{{ work.note }}</b>
+              {% endif %}
+            </div>
+            <div class="col col-auto">
+              <a href="{% url 'edit_work' pk=work.pk %}?next={{request.path}}" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-pen-to-square"></i> edit</a>
+              <a href="{% url 'delete_work' pk=work.pk %}?next={{request.path}}" class="btn btn-outline-danger btn-sm"><i class="fa-regular fa-circle-xmark"></i> delete</a>
+            </div>
+          </div>
+        </li>
+        {% empty %}
+        <li class="list-group-item">No data</li>
+        {% endfor %}
+      </ul>
+      <a href="{% url 'add_work' vin_code=view.kwargs.vin_code %}?next={{request.path}}" class="btn btn-primary mt-1">Add new work</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

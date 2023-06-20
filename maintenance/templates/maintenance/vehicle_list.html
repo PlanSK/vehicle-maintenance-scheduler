@@ -1,0 +1,30 @@
+{% extends 'maintenance/logined_base.html' %}
+{% load static %}
+
+{% block container %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col col-auto text-center">
+      {% for vehicle in object_list %}
+      <div class="card border-primary mb-3">
+        <div class="card-header">
+          <img src="{% static 'maintenance/img/car-svgrepo-com.svg'%}" alt="car icon" width="20px" style="filter: invert(1);"/>&nbsp;
+          <a href="{{ vehicle.get_absolute_url}}" class="link-primary">{{ vehicle }}</a>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{ vehicle }}</h5>
+          <p class="card-text text-start">
+            VIN: {{vehicle.vin_code}}<br>
+            Events count: {{vehicle.events.count}}<br>
+            Mileage: {{vehicle.vehicle_mileage}}
+          </p>
+          <a href="{% url 'edit_vehicle' pk=vehicle.pk %}?next={{request.path}}" class="btn btn-outline-warning btn-sm"><i class="fa-solid fa-pen-to-square"></i> edit</a>
+        <a href="{% url 'delete_vehicle' pk=vehicle.pk %}?next={{request.path}}" class="btn btn-outline-danger btn-sm"><i class="fa-regular fa-circle-xmark"></i> delete</a>
+        </div>
+      </div>
+      {% endfor %}
+      <a href="{% url 'add_vehicle' %}" class="btn btn-outline-primary"><i class="fa-solid fa-plus"></i> Add new vehicle</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

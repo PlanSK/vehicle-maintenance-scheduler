@@ -1,0 +1,18 @@
+{% extends 'maintenance/logined_base.html' %}
+{% load static %}
+
+{% block container %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col col-md-6 col-sm-auto text-center">
+      <h1>Work detail</h1>
+      <p class="text-start">
+        Work title: {{ object }}<br>
+        Interval (km): {{object.interval_km}}<br>
+        Interval (month): {{object.interval_month}}
+      </p>
+      <a href="{% url 'list_of_works' %}" class="btn btn-primary">Back to list of works</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
