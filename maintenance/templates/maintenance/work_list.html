@@ -14,7 +14,10 @@
             <div class="col">
               <h6><i class="fa-solid fa-screwdriver-wrench"></i> {{ work }}</h6><br>
               <span class="pe-3">Month interval: <b>{{ work.interval_month }}</b> m</span>
-              <span class="pe-3">Mileage: every <b>{{ work.interval_km|intcomma }}</b> km</span>
+              Mileage: every <b>{{ work.interval_km|intcomma }}</b> km
+              {% if work.note %}
+              <br>Notes: <b>{{ work.note }}</b>
+              {% endif %}
             </div>
             <div class="col col-auto">
               <a href="{% url 'edit_work' pk=work.pk %}?next={{request.path}}" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-pen-to-square"></i> edit</a>
