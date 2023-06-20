@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.urls import reverse_lazy
 
 
@@ -99,3 +101,22 @@ class MileageEvent(models.Model):
             self.vehicle.vehicle_mileage = self.mileage 
             self.vehicle.save()
         return super().save(*args, **kwargs)
+
+
+class WorkPattern(models.Model):
+    title = models.CharField(max_length=255, verbose_name='Title')
+    interval_month = models.IntegerField(verbose_name='Interval in month',
+                                         null=True, blank=True)
+    interval_km = models.IntegerField(verbose_name='Interval in kilometers',
+                                      null=True, blank=True)
+
+
+@receiver(post_save, sender=Vehicle)
+def create_works_list_from_patterns(sender, instance, created=None, **kwargs):
+    objects_to_create = (
+        Work(vehicle=instance, work_type=Work.WorkType.MAINTENANCE,
+             title=pattern.title, interval_month=pattern.interval_month,
+             interval_km=pattern.interval_km)
+        for pattern in WorkPattern.objects.all()
+    )
+    Work.objects.bulk_create(objs=objects_to_create)
