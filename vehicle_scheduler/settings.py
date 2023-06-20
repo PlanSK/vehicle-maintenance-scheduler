@@ -28,7 +28,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = int(os.environ.get('DEBUG', default=0))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', default='').split()
 
 
 # Application definition
@@ -84,7 +84,7 @@ WSGI_APPLICATION = 'vehicle_scheduler.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db', 'db.sqlite3'),
     }
 }
 
@@ -138,3 +138,12 @@ LOGIN_URL = '/login/'
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
+if os.environ.get('CSRF_TRUSTED_ORIGINS'):
+    CSRF_TRUSTED_ORIGINS = [
+        'https://' + addr 
+        for addr in os.environ['CSRF_TRUSTED_ORIGINS'].split(',')
+    ]
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
+USE_X_FORWARDED_PORT = True
