@@ -47,6 +47,7 @@
           {% else %}
             will need to be changed
             <span class="badge bg-success">{{planed_work.planed_mileage}} km</span>
+            (remainder: <span class="text-light"><b>{{planed_work.mileage_delta}}</b></span> km)
             or
             <span class="badge bg-success">{{planed_work.planed_date}}</span>
           {% endif %}
