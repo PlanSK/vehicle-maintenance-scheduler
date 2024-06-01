@@ -20,6 +20,8 @@ class Vehicle(models.Model):
     vehicle_body = models.CharField(max_length=10, verbose_name='Body')
     vehicle_year = models.IntegerField(verbose_name='Year')
     vehicle_mileage = models.IntegerField(verbose_name='Mileage')
+    vehicle_last_update_date = models.DateField(
+        verbose_name='Last update date', auto_now=True)
 
     def __str__(self) -> str:
         return ' '.join((self.vehicle_manufacturer, self.vehicle_model,
