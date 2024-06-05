@@ -5,8 +5,8 @@
 
 {% block container %}
 <div class="container">
-  <div class="row row-cols-1 row-cols-md-2">
-    <div class="col text-center">
+  <div class="row justify-content-md-center">
+    <div class="col col-md-5 col-sm-auto text-center">
       <div class="card border-secondary mb-3">
         <div class="card-header">
           <img src="{% static 'maintenance/img/car-svgrepo-com.svg'%}" alt="car icon" width="20px" style="filter: invert(1);"/>&nbsp;
@@ -17,10 +17,12 @@
             <div class="row row-cols-2">
               <div class="col"><i class="fa-solid fa-passport"></i> VIN:</div>
               <div class="col">{{object.vin_code}}</div>
-              <div class="col"><i class="fa-solid fa-calendar-week"></i> Events count:</div>
+              <div class="col"><i class="fa-solid fa-screwdriver-wrench"></i> Events count:</div>
               <div class="col">{{object.events.count}}</div>
               <div class="col"><i class="fa-solid fa-road"></i> Mileage:</div>
               <div class="col">{{object.vehicle_mileage|intcomma}} km</div>
+              <div class="col"><i class="fa-solid fa-calendar-days"></i> Last update:</div>
+              <div class="col">{{object.vehicle_last_update_date}}</div>
             </div>
           </p>
           <p class="text-center">
@@ -30,22 +32,39 @@
         </div>
       </div>
     </div>
-    <div class="col">
+  </div>
+  <div class="row justify-content-md-center">
+    <div class="col col-md-6 col-sm-auto">
+      <ul class="list-group" style="font-size: 0.8rem;">
+      {% for planed_work in planed_works %}
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+          <div class="ms-2 me-1">
+            <div class="fw-bold">{{planed_work.work}}</div>
+            <span class="text-info">last event:</span> <span class="text-light"><b>{{planed_work.last_event_date|date:"d.m.Y"}}</b></span>,
+            remainder: <span class="text-light"><b>{{planed_work.mileage_delta}}</b></span> km
+            <div class="progress" role="progressbar" aria-label="Example 1px high" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="height: 1px">
+              <div class="progress-bar" style="width: 25%"></div>
+            </div>
+          </div>
+          <span class="badge text-bg-primary rounded-pill">1</span>
+        </li>
+      {% endfor %}
+      </ul>
       {% for planed_work in planed_works %}
       <div class="alert alert-secondary d-flex align-items-center p-2 mb-1" role="alert" style="font-size: 0.8rem;">
         <i class="fa-solid fa-screwdriver-wrench me-3"></i>&nbsp;
         <div>
           {{planed_work.work}}<br>
           {% if planed_work.trigger == planed_work.trigger.MILEAGE %}
-            should have been changed <span class="badge bg-danger">{{planed_work.mileage_delta|abs}} km</span> ago 
+            should have been replaced <span class="badge bg-danger">{{planed_work.mileage_delta|abs}} km</span> ago 
             {% if planed_work.date_delta.days > 0  %}
             and by time <span class="badge bg-danger">{{planed_work.date_delta.days}} days ago ({{planed_work.planed_date}})</span>
             {% endif %}
           {% elif planed_work.trigger == planed_work.trigger.DATE %}
-            should have been changed <span class="badge bg-danger">{{planed_work.date_delta.days}} days ago ({{planed_work.planed_date}})</span> 
+            should have been replaced <span class="badge bg-danger">{{planed_work.date_delta.days}} days ago ({{planed_work.planed_date}})</span> 
             mileage remainder <span class="badge bg-success">{{planed_work.mileage_delta}} km</span>
           {% else %}
-            will need to be changed
+            will need to be replaced
             <span class="badge bg-success">{{planed_work.planed_mileage}} km</span>
             (remainder: <span class="text-light"><b>{{planed_work.mileage_delta}}</b></span> km)
             or
@@ -58,8 +77,8 @@
       {% endfor %}
     </div>
   </div>
-  <div class="row">
-    <div class="col text-center">
+  <div class="row justify-content-md-center">
+    <div class="col col-md-5 col-sm_auto text-center">
       <a href="{% url 'events_list' %}?next={{request.path}}" class="btn btn-outline-success btn-sm"><i class="fa-solid fa-book"></i> See all events list</a>
       <a href="{% url 'list_of_works' vin_code=object.vin_code %}" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-screwdriver-wrench"></i> List of works</a>
       <a href="{% url 'index' %}" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-list"></i> Back to vehicle list</a>

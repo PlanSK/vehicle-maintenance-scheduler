@@ -23,6 +23,7 @@ class PlanedWork:
     mileage_delta: int
     planed_date: datetime.date
     date_delta: datetime.timedelta
+    last_event_date: datetime.date
 
 
 def get_maintenance_limits(vin_code: str) -> list[PlanedWork]:
@@ -54,7 +55,8 @@ def get_maintenance_limits(vin_code: str) -> list[PlanedWork]:
                 planed_mileage=limit_mileage,
                 mileage_delta=limit_mileage - current_vehicle.vehicle_mileage,
                 planed_date=limit_date,
-                date_delta=timezone.now().date() - limit_date
+                date_delta=timezone.now().date() - limit_date,
+                last_event_date=last_event.work_date
             )
         )
 
