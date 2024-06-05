@@ -146,6 +146,16 @@ class EventListView(LoginRequiredMixin, TitleMixin, ListView):
     title = 'Events list'
 
 
+class EventListByTypeView(LoginRequiredMixin, TitleMixin, ListView):
+    model = Event
+    title = 'Events list'
+    template_name = 'maintenance/event_list.html'
+
+    def get_queryset(self) -> QuerySet[Any]:
+        return super().get_queryset().filter(
+            work__pk=self.kwargs.get('pk'))
+
+
 class EventDetailView(LoginRequiredMixin, TitleMixin, DetailView):
     model = Event
     title = 'Event details'

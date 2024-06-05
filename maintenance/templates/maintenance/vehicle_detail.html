@@ -40,7 +40,7 @@
         <li class="list-group-item">
           <div class="ms-2 me-1">
             <div class="fw-bold text-primary-emphasis text-center pb-1">
-              {{planed_work.work}} <span class="badge rounded-pill text-bg-info">{{planed_work.current_event_counter}}</span>
+              {{planed_work.work}}
             </div>
             <div class="progress" role="progressbar" aria-label="Remaining progress" aria-valuenow="{{planed_work.remaining_procentage}}" aria-valuemin="0" aria-valuemax="100" style="height: 20px">
               {% if planed_work.remaining_procentage < 80 %}
@@ -57,10 +57,13 @@
             {% endif %}
             <br>
             {% if planed_work.mileage_delta > 0 %}
-            <span class="text-info">mileage remaining:</span> <span class="text-light"><b>{{planed_work.mileage_delta}}</b></span> km
+            <span class="text-info">mileage remaining:</span> <span class="text-light"><b>{{planed_work.mileage_delta}}</b></span> km (every {{planed_work.work.interval_km}} km)
             {% else %}
-            <span class="text-danger"><i class="fa-solid fa-circle-exclamation"></i></span> mileage remaining: <span class="text-danger"><b>over {{planed_work.mileage_delta|abs}}</b></span> km
+            <span class="text-danger"><i class="fa-solid fa-circle-exclamation"></i></span> mileage remaining: <span class="text-danger"><b>over {{planed_work.mileage_delta|abs}}</b></span> km (every {{planed_work.work.interval_km}} km)
             {% endif %}
+            <br>
+            There are only <span class="text-light"><b>{{planed_work.current_event_counter}}</b></span> of these events.&nbsp;
+            <a class="link-opacity-50-hover" href="{% url 'event_by_type' pk=planed_work.work.pk %}">See all</a>
           </div>
         </li>
       {% empty %}

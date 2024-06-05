@@ -70,4 +70,5 @@ def get_maintenance_limits(vin_code: str) -> list[PlanedWork]:
             )
         )
 
-    return worklist
+    return sorted(worklist, key=lambda work: work.last_event_date,
+                  reverse=True)
