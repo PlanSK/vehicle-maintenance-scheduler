@@ -18,7 +18,8 @@
               {{event.part_price|add:event.work_price|intcomma}} руб.
             </div>
             <div class="col col-auto">
-              <a href="{% url 'edit_event' pk=event.pk %}?next={{request.path}}" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-pen-to-square"></i> edit</a>
+              <a href="{% url 'event_detail' pk=event.pk %}?next={{request.path}}" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-screwdriver-wrench"></i> detail</a>
+              <a href="{% url 'edit_event' pk=event.pk %}?next={{request.path}}" class="btn btn-outline-warning btn-sm"><i class="fa-solid fa-pen-to-square"></i> edit</a>
               <a href="{% url 'delete_event' pk=event.pk %}?next={{request.path}}" class="btn btn-outline-danger btn-sm"><i class="fa-regular fa-circle-xmark"></i> delete</a>
             </div>
           </div>

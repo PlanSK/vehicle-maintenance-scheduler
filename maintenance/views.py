@@ -65,7 +65,7 @@ class VehicleDetailView(LoginRequiredMixin, TitleMixin, DetailView):
         return get_object_or_404(Vehicle, vin_code=self.kwargs['vin_code'])
     
     def get_context_data(self, **kwargs):
-        context: dict = super().get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context.update({
             'planed_works': get_maintenance_limits(self.object.vin_code),
         })
@@ -144,6 +144,16 @@ class EventDeleteView(LoginRequiredMixin, SuccessUrlMixin, TitleMixin,
 class EventListView(LoginRequiredMixin, TitleMixin, ListView):
     model = Event
     title = 'Events list'
+
+
+class EventListByTypeView(LoginRequiredMixin, TitleMixin, ListView):
+    model = Event
+    title = 'Events list'
+    template_name = 'maintenance/event_list.html'
+
+    def get_queryset(self) -> QuerySet[Any]:
+        return super().get_queryset().filter(
+            work__pk=self.kwargs.get('pk'))
 
 
 class EventDetailView(LoginRequiredMixin, TitleMixin, DetailView):

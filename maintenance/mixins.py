@@ -2,7 +2,7 @@ from django.urls import reverse_lazy
 
 
 class TitleMixin(object):
-    title = None
+    title: str = ''
 
     def get_title(self):
         return self.title
