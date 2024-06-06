@@ -1,5 +1,6 @@
 {% extends 'maintenance/logined_base.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block container %}
 <div class="container">
@@ -9,7 +10,7 @@
       <p class="text-start">
         Vehicle: {{object.vehicle}}<br>
         Date: {{ object.work_date }}<br>
-        Mileage: {{ object.mileage }}<br>
+        Mileage: {{ object.mileage|intcomma }} km<br>
         Work: {{ object.work }}<br>
         Part Price: {{ object.part_price }}<br>
         Work Price: {{ object.work_price }}<br>

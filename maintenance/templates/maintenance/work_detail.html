@@ -1,5 +1,6 @@
 {% extends 'maintenance/logined_base.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block container %}
 <div class="container">
@@ -8,7 +9,7 @@
       <h1>Work detail</h1>
       <p class="text-start">
         Work title: {{ object }}<br>
-        Interval (km): {{object.interval_km}}<br>
+        Interval (km): {{object.interval_km|intcomma}}<br>
         Interval (month): {{object.interval_month}}
       </p>
       <a href="{% url 'list_of_works' %}" class="btn btn-primary">Back to list of works</a>

@@ -1,5 +1,6 @@
 {% extends 'maintenance/logined_base.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block container %}
 <div class="container">
@@ -15,8 +16,8 @@
           <h5 class="card-title">{{ vehicle }}</h5>
           <p class="card-text text-start">
             VIN: {{vehicle.vin_code}}<br>
-            Events count: {{vehicle.events.count}}<br>
-            Mileage: {{vehicle.vehicle_mileage}}
+            Events counter: {{vehicle.events.count}}<br>
+            Mileage: {{vehicle.vehicle_mileage|intcomma}} km
           </p>
           <a href="{% url 'edit_vehicle' pk=vehicle.pk %}?next={{request.path}}" class="btn btn-outline-warning btn-sm"><i class="fa-solid fa-pen-to-square"></i> edit</a>
         <a href="{% url 'delete_vehicle' pk=vehicle.pk %}?next={{request.path}}" class="btn btn-outline-danger btn-sm"><i class="fa-regular fa-circle-xmark"></i> delete</a>
