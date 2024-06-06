@@ -7,9 +7,10 @@
 <div class="container">
   <div class="row justify-content-md-center">
     <div class="col col-md-5 col-sm-auto text-center">
-      <div class="card border-secondary mb-3">
-        <div class="card-header">
-          <img src="{% static 'maintenance/img/car-svgrepo-com.svg'%}" alt="car icon" width="20px" style="filter: invert(1);"/>&nbsp;
+      <div class="card border border-primary-subtle rounded-3 mb-3">
+        <div class="card-header text-primary-emphasis bg-light-subtle">
+          <img class="card-img-top" src="{% static 'maintenance/img/car_rightside.svg'%}" alt="Car image" height="50px">
+          <br>
           {{object}}
         </div>
         <div class="card-body text-start">
@@ -27,7 +28,7 @@
           </p>
           <p class="text-center">
             <a href="{% url 'add_event' vin_code=object.vin_code %}?next={{request.path}}" class="btn btn-outline-primary btn-sm"><i class="fa-regular fa-calendar-plus"></i> Add new event</a>
-          <a href="{% url 'add_mileage' vin_code=object.vin_code %}?next={{request.path}}" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-road-circle-check"></i> Update mileage</a>
+          <a href="{% url 'add_mileage' vin_code=object.vin_code %}?next={{request.path}}" class="btn btn-outline-info btn-sm"><i class="fa-solid fa-road-circle-check"></i> Update mileage</a>
           </p>
         </div>
       </div>
@@ -37,7 +38,7 @@
     <div class="col col-md-6 col-sm-auto pb-2">
       <ul class="list-group" style="font-size: 0.8rem;">
       {% for planed_work in planed_works %}
-        <li class="list-group-item">
+        <li class="list-group-item border-primary-subtle">
           <div class="ms-2 me-1">
             <div class="fw-bold text-primary-emphasis text-center pb-1">
               {{planed_work.work}}
