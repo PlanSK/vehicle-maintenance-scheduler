@@ -43,25 +43,27 @@
             <div class="fw-bold text-primary-emphasis text-center pb-1">
               {{planed_work.work}}
             </div>
-            <div class="progress" role="progressbar" aria-label="Remaining progress" aria-valuenow="{{planed_work.remaining_procentage}}" aria-valuemin="0" aria-valuemax="100" style="height: 20px">
-              {% if planed_work.remaining_procentage < 80 %}
-              <div class="progress-bar" style="width: {{planed_work.remaining_procentage}}%">{{planed_work.remaining_procentage}}%</div>
-              {% elif planed_work.remaining_procentage > 80 and planed_work.remaining_procentage < 90 %}
-              <div class="progress-bar bg-warning text-dark" style="width: {{planed_work.remaining_procentage}}%">{{planed_work.remaining_procentage}}%</div>
+            {% if planed_work.work.interval_km %}
+              <div class="progress" role="progressbar" aria-label="Remaining progress" aria-valuenow="{{planed_work.remaining_procentage}}" aria-valuemin="0" aria-valuemax="100" style="height: 20px">
+                {% if planed_work.remaining_procentage < 80 %}
+                <div class="progress-bar" style="width: {{planed_work.remaining_procentage}}%">{{planed_work.remaining_procentage}}%</div>
+                {% elif planed_work.remaining_procentage > 80 and planed_work.remaining_procentage < 90 %}
+                <div class="progress-bar bg-warning text-dark" style="width: {{planed_work.remaining_procentage}}%">{{planed_work.remaining_procentage}}%</div>
+                {% else %}
+                <div class="progress-bar bg-danger" style="width: {{planed_work.remaining_procentage}}%">{{planed_work.remaining_procentage}}%</div>
+                {% endif %}
+              </div>
+              {% if planed_work.mileage_delta > 0 %}
+              <span class="text-info">mileage remaining:</span> <span class="text-light"><b>{{planed_work.mileage_delta|intcomma}}</b></span> km (every {{planed_work.work.interval_km|intcomma}} km)
               {% else %}
-              <div class="progress-bar bg-danger" style="width: {{planed_work.remaining_procentage}}%">{{planed_work.remaining_procentage}}%</div>
+              <span class="text-danger"><i class="fa-solid fa-circle-exclamation"></i></span> mileage remaining: <span class="text-danger"><b>over {{planed_work.mileage_delta|abs|intcomma}}</b></span> km 
+              (every {{planed_work.work.interval_km|intcomma}} km)
               {% endif %}
-            </div>
+            {% endif %}
+            <br>
             <span class="text-info">last event:</span> <span class="text-light"><b>{{planed_work.last_event_date|date:"d.m.Y"}}</b></span>
             {% if planed_work.trigger == planed_work.trigger.DATE %}
             <span class="text-warning">(expired {{planed_work.date_delta.days}} days ago)</span>
-            {% endif %}
-            <br>
-            {% if planed_work.mileage_delta > 0 %}
-            <span class="text-info">mileage remaining:</span> <span class="text-light"><b>{{planed_work.mileage_delta|intcomma}}</b></span> km (every {{planed_work.work.interval_km|intcomma}} km)
-            {% else %}
-            <span class="text-danger"><i class="fa-solid fa-circle-exclamation"></i></span> mileage remaining: <span class="text-danger"><b>over {{planed_work.mileage_delta|abs|intcomma}}</b></span> km 
-            (every {{planed_work.work.interval_km|intcomma}} km)
             {% endif %}
             <br>
             There are only <span class="text-light"><b>{{planed_work.current_event_counter}}</b></span> of these events.&nbsp;

@@ -13,8 +13,12 @@
           <div class="row">
             <div class="col">
               <h6><i class="fa-solid fa-screwdriver-wrench"></i> {{ work }}</h6><br>
+              {% if work.interval_month %}
               <span class="pe-3">Month interval: <b>{{ work.interval_month }}</b> m</span>
+              {% endif %}
+              {% if work.interval_km %}
               Mileage: every <b>{{ work.interval_km|intcomma }}</b> km
+              {% endif %}
               {% if work.note %}
               <br>Notes: <b>{{ work.note }}</b>
               {% endif %}
