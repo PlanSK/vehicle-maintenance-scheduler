@@ -21,8 +21,8 @@ class PlanedWork:
     trigger: WorkTrigger
     planed_mileage: int
     mileage_delta: int
-    planed_date: datetime.date
-    date_delta: datetime.timedelta
+    planed_date: datetime.date | None
+    date_delta: datetime.timedelta | None
     last_event_date: datetime.date
     remaining_procentage: int
     current_event_counter: int
@@ -32,6 +32,11 @@ def get_maintenance_limits(vin_code: str) -> list[PlanedWork]:
     current_vehicle = get_object_or_404(Vehicle, vin_code=vin_code)
     vehicle_events = current_vehicle.events.all()
     worklist = []
+    limit_mileage = 0
+    mileage_delta = 0
+    mileage_remaining_procentage = 0
+    limit_date = None
+    date_delta = None
 
     for current_work in Work.objects.filter(
             vehicle__vin_code=vin_code,
@@ -40,22 +45,28 @@ def get_maintenance_limits(vin_code: str) -> list[PlanedWork]:
             work=current_work).order_by('-work_date')
         current_event_counter = current_event_list.count()
         last_event = current_event_list.first()
-        if (not last_event or not current_work.interval_km
-                and not current_work.interval_month):
+        if not last_event:
             continue
-        limit_mileage = last_event.mileage + current_work.interval_km
-        mileage_delta=limit_mileage - current_vehicle.vehicle_mileage
-        mileage_remaining_procentage = 100 - round(
-            (mileage_delta / current_work.interval_km) * 100
-        )
-        limit_date = last_event.work_date + relativedelta(
-            months=current_work.interval_month)
-        if current_vehicle.vehicle_mileage >= limit_mileage:
+        if current_work.interval_km:
+            limit_mileage = last_event.mileage + current_work.interval_km
+            mileage_delta = limit_mileage - current_vehicle.vehicle_mileage
+            mileage_remaining_procentage = 100 - round(
+                (mileage_delta / current_work.interval_km) * 100
+            )
+        if current_work.interval_month:
+            limit_date = last_event.work_date + relativedelta(
+                months=current_work.interval_month)
+            date_delta = timezone.now().date() - limit_date
+
+        if (current_work.interval_km
+            and current_vehicle.vehicle_mileage >= limit_mileage):
             work_triger = WorkTrigger.MILEAGE
-        elif timezone.now().date() >= limit_date:
+        elif (current_work.interval_month
+              and timezone.now().date() >= limit_date):
             work_triger = WorkTrigger.DATE
         else:
             work_triger = WorkTrigger.NONE
+
         worklist.append(
             PlanedWork(
                 work=current_work,
@@ -63,10 +74,10 @@ def get_maintenance_limits(vin_code: str) -> list[PlanedWork]:
                 planed_mileage=limit_mileage,
                 mileage_delta=mileage_delta,
                 planed_date=limit_date,
-                date_delta=timezone.now().date() - limit_date,
+                date_delta=date_delta,
                 last_event_date=last_event.work_date,
                 remaining_procentage=mileage_remaining_procentage,
-                current_event_counter = current_event_counter
+                current_event_counter=current_event_counter
             )
         )
 
