@@ -117,11 +117,12 @@ class WorkPattern(models.Model):
 
 
 @receiver(post_save, sender=Vehicle)
-def create_works_list_from_patterns(sender, instance, created=None, **kwargs):
-    objects_to_create = (
-        Work(vehicle=instance, work_type=Work.WorkType.MAINTENANCE,
-             title=pattern.title, interval_month=pattern.interval_month,
-             interval_km=pattern.interval_km)
-        for pattern in WorkPattern.objects.all()
-    )
-    Work.objects.bulk_create(objs=objects_to_create)
+def create_works_list_from_patterns(sender, instance, created, **kwargs):
+    if created:
+        objects_to_create = (
+            Work(vehicle=instance, work_type=Work.WorkType.MAINTENANCE,
+                title=pattern.title, interval_month=pattern.interval_month,
+                interval_km=pattern.interval_km)
+            for pattern in WorkPattern.objects.all()
+        )
+        Work.objects.bulk_create(objs=objects_to_create)
