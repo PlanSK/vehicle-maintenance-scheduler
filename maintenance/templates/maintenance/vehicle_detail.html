@@ -23,7 +23,15 @@
               <div class="col"><i class="fa-solid fa-road"></i> Mileage:</div>
               <div class="col">{{object.vehicle_mileage|intcomma}} km</div>
               <div class="col"><i class="fa-solid fa-calendar-days"></i> Last update:</div>
-              <div class="col">{{object.vehicle_last_update_date}}</div>
+              <div class="col">
+                {% if outdate_mileage_level == 1 %}
+                  <span class="text-warning"><i class="fa-solid fa-triangle-exclamation fa-fade"></i> {{object.vehicle_last_update_date}}</span>
+                {% elif outdate_mileage_level == 2 %}
+                  <span class="text-danger"><i class="fa-solid fa-circle-exclamation fa-fade"></i> {{object.vehicle_last_update_date}}</span>
+                {% else %}
+                  {{object.vehicle_last_update_date}}
+                {% endif %}
+              </div>
             </div>
           </p>
           <p class="text-center">

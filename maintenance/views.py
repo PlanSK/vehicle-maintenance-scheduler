@@ -1,4 +1,3 @@
-import datetime
 from typing import Any
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -8,12 +7,13 @@ from django.shortcuts import get_object_or_404
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.utils import timezone
 
 from maintenance.mixins import TitleMixin, SuccessUrlMixin
 from maintenance.models import Vehicle, Work, Event, MileageEvent
 from maintenance.forms import (EventForm, MileageEventForm, VehicleForm,
                                WorkForm)
-from maintenance.services.maintenance import get_maintenance_limits
+from maintenance.services.maintenance import get_maintenance_limits, get_outdate_mileage_level
 
 
 class LoginUser(TitleMixin, SuccessUrlMixin, LoginView):
@@ -68,6 +68,7 @@ class VehicleDetailView(LoginRequiredMixin, TitleMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context.update({
             'planed_works': get_maintenance_limits(self.object.vin_code),
+            'outdate_mileage_level': get_outdate_mileage_level(self.object.vin_code),
         })
         return context
 
@@ -122,7 +123,7 @@ class EventCreateView(LoginRequiredMixin, TitleMixin, SuccessUrlMixin,
         vehicle = get_object_or_404(Vehicle, vin_code=self.kwargs['vin_code'])
         return {
             'vehicle': vehicle,
-            'work_date': datetime.date.today().strftime('%Y-%m-%d'),
+            'work_date': timezone.now().strftime('%Y-%m-%d'),
             'mileage': vehicle.vehicle_mileage,
         }
 
@@ -171,7 +172,7 @@ class MileageCreateView(LoginRequiredMixin, TitleMixin, SuccessUrlMixin,
         vehicle = get_object_or_404(Vehicle, vin_code=self.kwargs['vin_code'])
         return {
             'vehicle': vehicle,
-            'mileage_date': datetime.date.today().strftime('%Y-%m-%d'),
+            'mileage_date': timezone.now().strftime('%Y-%m-%d'),
             'mileage': vehicle.vehicle_mileage,
         }
 
