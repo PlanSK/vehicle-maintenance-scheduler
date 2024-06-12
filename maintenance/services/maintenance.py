@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.conf import settings
 
 from maintenance.models import Work, Vehicle, Event
 
@@ -14,6 +15,11 @@ class WorkTrigger(Enum):
     NONE = 0
     MILEAGE = 1
     DATE = 2
+
+class OutOfDateMileageLevel(Enum):
+    FRESH = 0
+    WARNING = 1
+    OLD = 2
 
 @dataclass
 class PlanedWork:
@@ -83,3 +89,19 @@ def get_maintenance_limits(vin_code: str) -> list[PlanedWork]:
 
     return sorted(worklist, key=lambda work: work.last_event_date,
                   reverse=True)
+
+
+def get_outdate_mileage_level(vin_code: str) -> int:
+    current_date = timezone.now().date()
+    current_vehicle = get_object_or_404(Vehicle, vin_code=vin_code)
+    mileage_date_timedelta = (
+        current_date - current_vehicle.vehicle_last_update_date
+    ).days
+    outofdate_level = OutOfDateMileageLevel.FRESH
+    if (settings.WARNING_OUTDATE_LEVEL <= mileage_date_timedelta <
+        settings.OLD_OUTDATE_LEVEL):
+        outofdate_level = OutOfDateMileageLevel.WARNING
+    elif mileage_date_timedelta >= settings.OLD_OUTDATE_LEVEL:
+        outofdate_level = OutOfDateMileageLevel.OLD
+    
+    return outofdate_level.value
