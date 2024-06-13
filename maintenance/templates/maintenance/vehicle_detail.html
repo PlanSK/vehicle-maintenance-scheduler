@@ -50,6 +50,7 @@
           <div class="ms-2 me-1">
             <div class="fw-bold text-primary-emphasis text-center pb-1">
               {{planed_work.work}}
+              <a href="{% url 'add_current_event' vin_code=object.vin_code work_id=planed_work.work.pk %}?next={{request.path}}" class="btn btn-outline-primary btn-sm">+</a>
             </div>
             {% if planed_work.work.interval_km %}
               <div class="progress" role="progressbar" aria-label="Remaining progress" aria-valuenow="{{planed_work.remaining_procentage}}" aria-valuemin="0" aria-valuemax="100" style="height: 20px">

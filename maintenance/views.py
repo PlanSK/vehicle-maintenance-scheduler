@@ -128,6 +128,19 @@ class EventCreateView(LoginRequiredMixin, TitleMixin, SuccessUrlMixin,
         }
 
 
+class CurrentEventCreateView(EventCreateView):
+    def dispatch(self, request, *args: Any, **kwargs: Any):
+        self.work_id = self.kwargs.get('work_id')
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_initial(self):
+        initial = super().get_initial()
+        if self.work_id:
+            current_work = get_object_or_404(Work, pk=self.work_id)
+            initial.update({'work': current_work})
+        return initial
+
+
 class EventEditView(LoginRequiredMixin, TitleMixin, SuccessUrlMixin,
                       UpdateView):
     model = Event
