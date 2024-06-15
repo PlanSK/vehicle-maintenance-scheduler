@@ -4,6 +4,7 @@ import datetime
 
 from dateutil.relativedelta import relativedelta
 
+from django.db.models.query import QuerySet
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.conf import settings
@@ -105,3 +106,15 @@ def get_outdate_mileage_level(vin_code: str) -> int:
         outofdate_level = OutOfDateMileageLevel.OLD
     
     return outofdate_level.value
+
+
+def get_average_mileage_interval(events_list: QuerySet) -> int:
+    event_counter = events_list.count()
+    previous_mileage = events_list.first().mileage
+    mileage_delta_sum = 0
+    if event_counter <= 1:
+        return 0 
+    for event in events_list:
+        mileage_delta_sum += previous_mileage - event.mileage
+        previous_mileage = event.mileage
+    return mileage_delta_sum // (event_counter - 1)
