@@ -7,27 +7,39 @@
   <div class="row justify-content-center">
     <div class="col col-md-6 col-sm-auto text-center">
       <h3>Evenets list</h3>
-      <ul class="list-group">
+      <ul class="list-group" style="font-size: 0.8rem;">
         {% for event in object_list %}
-        <li class="list-group-item text-start" style="font-size: 0.8rem;">
-          <div class="row">
-            <div class="col">
-              <i class="fa-solid fa-screwdriver-wrench"></i> {{ event.work }}<br>
-              <span class="pe-3">{{ event.work_date|date:"d.m.Y" }}</span>
-              <span class="badge bg-secondary me-3">{{ event.mileage|intcomma }} km</span>
-              {{event.part_price|add:event.work_price|intcomma}} руб.
+        <li class="list-group-item">
+          <span> 
+            <a href="{% url 'event_detail' pk=event.pk %}?next={{request.path}}" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+              <i class="fa-solid fa-screwdriver-wrench"></i> {{ event.work }}
+            </a>
+          </span><br>
+          <div class="d-flex justify-content-between">
+            <div class="text-start">
+              <span class="text-primary-emphasis">
+                Event date: <span class="text-light fw-bold">{{ event.work_date|date:"d.m.Y" }}</span><br>
+                Mileage: <span class="text-light fw-bold">{{ event.mileage|intcomma }}</span> km<br>
+                {% if event.part_price or event.work_price %}
+                Price: <span class="text-light fw-bold">{{event.part_price|add:event.work_price|intcomma}}</span> руб.
+                {% endif %}
+              </span>
             </div>
-            <div class="col col-auto">
-              <a href="{% url 'event_detail' pk=event.pk %}?next={{request.path}}" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-screwdriver-wrench"></i> detail</a>
-              <a href="{% url 'edit_event' pk=event.pk %}?next={{request.path}}" class="btn btn-outline-warning btn-sm"><i class="fa-solid fa-pen-to-square"></i> edit</a>
-              <a href="{% url 'delete_event' pk=event.pk %}?next={{request.path}}" class="btn btn-outline-danger btn-sm"><i class="fa-regular fa-circle-xmark"></i> delete</a>
-            </div>
+            <span>
+              <a href="{% url 'edit_event' pk=event.pk %}?next={{request.path}}" class="btn btn-outline-warning btn-sm"><i class="fa-solid fa-pen-to-square"></i></a>
+              <a href="{% url 'delete_event' pk=event.pk %}?next={{request.path}}" class="btn btn-outline-danger btn-sm"><i class="fa-regular fa-trash-can"></i></a>
+            </span>
           </div>
         </li>
         {% empty %}
         <li class="list-group-item">No data</li>
         {% endfor %}
       </ul>
+      {% if avg_mileage %}
+      <span style="font-size: 0.8rem;" class="text-primary-emphasis">
+        Average mileage interval: <span class="text-light fw-bold">{{avg_mileage}}</span> km
+      </span>
+      {% endif %}
       {% if request.GET.next %}
       <a class="btn btn-outline-secondary mt-1" href="{{ request.GET.next }}">Back</a>
       {% endif %}

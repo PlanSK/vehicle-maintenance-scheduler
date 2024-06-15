@@ -13,7 +13,10 @@ from maintenance.mixins import TitleMixin, SuccessUrlMixin
 from maintenance.models import Vehicle, Work, Event, MileageEvent
 from maintenance.forms import (EventForm, MileageEventForm, VehicleForm,
                                WorkForm)
-from maintenance.services.maintenance import get_maintenance_limits, get_outdate_mileage_level
+from maintenance.services.maintenance import (
+    get_maintenance_limits, get_outdate_mileage_level,
+    get_average_mileage_interval
+)
 
 
 class LoginUser(TitleMixin, SuccessUrlMixin, LoginView):
@@ -168,6 +171,11 @@ class EventListByTypeView(LoginRequiredMixin, TitleMixin, ListView):
     def get_queryset(self) -> QuerySet[Any]:
         return super().get_queryset().filter(
             work__pk=self.kwargs.get('pk'))
+
+    def get_context_data(self, **kwargs):
+        content = super().get_context_data(**kwargs)
+        content['avg_mileage'] = get_average_mileage_interval(self.object_list)
+        return content
 
 
 class EventDetailView(LoginRequiredMixin, TitleMixin, DetailView):
