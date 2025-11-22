@@ -14,6 +14,14 @@
           {{object}}
         </div>
         <div class="card-body text-start">
+          <p class="text-center">Notifications:
+              {% if expired_events.by_date %}
+                <i class="fa-solid fa-calendar-xmark text-warning"></i> <span class="badge text-bg-warning">{{expired_events.by_date}}</span>
+              {% endif %}
+              {% if expired_events.by_mileage %}
+                <i class="fa-solid fa-road-circle-xmark text-danger"></i> <span class="badge text-bg-danger">{{expired_events.by_mileage}}</span>
+              {% endif %}
+          </p>
           <p class="card-text">
             <div class="row row-cols-2">
               <div class="col"><i class="fa-solid fa-passport"></i> VIN:</div>
@@ -54,26 +62,31 @@
             </div>
             {% if planed_work.work.interval_km %}
               <div class="progress" role="progressbar" aria-label="Remaining progress" aria-valuenow="{{planed_work.remaining_procentage}}" aria-valuemin="0" aria-valuemax="100" style="height: 20px">
-                {% if planed_work.remaining_procentage < 80 %}
+                {% if planed_work.remaining_procentage < view_options.warning_procentage_value %}
                 <div class="progress-bar" style="width: {{planed_work.remaining_procentage}}%">{{planed_work.remaining_procentage}}%</div>
-                {% elif planed_work.remaining_procentage > 80 and planed_work.remaining_procentage < 90 %}
+                {% elif planed_work.remaining_procentage > view_options.warning_procentage_value and planed_work.remaining_procentage < view_options.deadline_procentage_value %}
                 <div class="progress-bar bg-warning text-dark" style="width: {{planed_work.remaining_procentage}}%">{{planed_work.remaining_procentage}}%</div>
                 {% else %}
                 <div class="progress-bar bg-danger" style="width: {{planed_work.remaining_procentage}}%">{{planed_work.remaining_procentage}}%</div>
                 {% endif %}
               </div>
-              {% if planed_work.mileage_delta > 0 %}
-              <span class="text-info">mileage remaining:</span> <span class="text-light"><b>{{planed_work.mileage_delta|intcomma}}</b></span> km (every {{planed_work.work.interval_km|intcomma}} km)
-              {% else %}
-              <span class="text-danger"><i class="fa-solid fa-circle-exclamation"></i></span> mileage remaining: <span class="text-danger"><b>over {{planed_work.mileage_delta|abs|intcomma}}</b></span> km 
-              (every {{planed_work.work.interval_km|intcomma}} km)
+              <div class="col">
+                {% if planed_work.mileage_delta > 0 %}
+                <span class="text-info">Mileage remaining:</span> <span class="text-light"><b>{{planed_work.mileage_delta|intcomma}}</b></span> km
+                {% else %}
+                <span class="text-danger"><i class="fa-solid fa-circle-exclamation"></i></span> mileage remaining: <span class="text-danger"><b>over {{planed_work.mileage_delta|abs|intcomma}}</b></span> km 
+                (every {{planed_work.work.interval_km|intcomma}} km)
+                {% endif %}
+              </div>
+            {% endif %}
+            <div class="col">
+              <span class="text-info">Last event:</span> <span class="text-light"><b>{{planed_work.last_event_date|date:"d.m.Y"}}</b></span>
+              {% if planed_work.trigger == planed_work.trigger.DATE %}
+                <span class="text-warning">(expired {{planed_work.date_delta.days}} days ago)</span>
               {% endif %}
-            {% endif %}
+            </div>
             <br>
-            <span class="text-info">last event:</span> <span class="text-light"><b>{{planed_work.last_event_date|date:"d.m.Y"}}</b></span>
-            {% if planed_work.trigger == planed_work.trigger.DATE %}
-            <span class="text-warning">(expired {{planed_work.date_delta.days}} days ago)</span>
-            {% endif %}
+            <span class="text-info">Work intervals:</span> {{planed_work.work.interval_km|intcomma}} km / {{planed_work.work.interval_month}} month
             <br>
             There are only <span class="text-light"><b>{{planed_work.current_event_counter}}</b></span> of these events.&nbsp;
             <a class="link-opacity-50-hover" href="{% url 'event_by_type' pk=planed_work.work.pk %}">See all</a>
