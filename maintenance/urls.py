@@ -38,7 +38,7 @@ urlpatterns = [
     path('add_current_event/<str:vin_code>/<int:work_id>/', views.CurrentEventCreateView.as_view(), name="add_current_event"),
     path('edit_event/<int:pk>/', views.EventEditView.as_view(), name="edit_event"),
     path('delete_event/<int:pk>/', views.EventDeleteView.as_view(), name="delete_event"),
-    path('events_list/', views.EventListView.as_view(), name="events_list"),
+    path('events_list/<str:vin_code>/', views.EventListView.as_view(), name="events_list"),
     path('event_detail/<int:pk>/', views.EventDetailView.as_view(), name="event_detail"),
     path('event_by_type/<int:pk>/', views.EventListByTypeView.as_view(), name="event_by_type"),
 # Mileage events section

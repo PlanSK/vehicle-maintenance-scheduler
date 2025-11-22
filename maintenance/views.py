@@ -169,6 +169,11 @@ class EventListView(LoginRequiredMixin, TitleMixin, ListView):
     model = Event
     title = 'Events list'
 
+    def get_queryset(self) -> QuerySet[Any]:
+        return super().get_queryset().filter(
+            vehicle__vin_code=self.kwargs['vin_code']
+        )
+
 
 class EventListByTypeView(LoginRequiredMixin, TitleMixin, ListView):
     model = Event
