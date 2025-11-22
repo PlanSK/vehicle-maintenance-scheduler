@@ -1,21 +1,22 @@
+from mimetypes import init
 from typing import Any
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.db.models.query import QuerySet
 from django.shortcuts import get_object_or_404
-from django.views.generic.detail import DetailView
-from django.views.generic.list import ListView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.utils import timezone
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.list import ListView
 
-from maintenance.mixins import TitleMixin, SuccessUrlMixin
-from maintenance.models import Vehicle, Work, Event, MileageEvent
-from maintenance.forms import (EventForm, MileageEventForm, VehicleForm,
-                               WorkForm)
+from maintenance.forms import EventForm, MileageEventForm, VehicleForm, WorkForm
+from maintenance.mixins import SuccessUrlMixin, TitleMixin
+from maintenance.models import Event, MileageEvent, Vehicle, Work
 from maintenance.services.maintenance import (
-    get_maintenance_limits, get_outdate_mileage_level,
-    get_average_mileage_interval
+    get_average_mileage_interval,
+    get_maintenance_limits,
+    get_outdate_mileage_level,
 )
 
 
@@ -123,12 +124,18 @@ class EventCreateView(LoginRequiredMixin, TitleMixin, SuccessUrlMixin,
     title = 'Add new event'
 
     def get_initial(self):
-        vehicle = get_object_or_404(Vehicle, vin_code=self.kwargs['vin_code'])
-        return {
-            'vehicle': vehicle,
+        initial = super().get_initial()
+        vehicle_instance = get_object_or_404(
+            Vehicle, vin_code=self.kwargs['vin_code']
+        )
+        update_data = {
+            'vehicle': vehicle_instance,
             'work_date': timezone.now().strftime('%Y-%m-%d'),
-            'mileage': vehicle.vehicle_mileage,
+            'mileage': vehicle_instance.vehicle_mileage,
         }
+        initial.update(update_data)
+
+        return initial
 
 
 class CurrentEventCreateView(EventCreateView):
