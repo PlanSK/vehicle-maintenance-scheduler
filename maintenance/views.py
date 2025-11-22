@@ -1,3 +1,4 @@
+from mimetypes import init
 from typing import Any
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -153,12 +154,18 @@ class EventCreateView(
     title = "Add new event"
 
     def get_initial(self):
-        vehicle = get_object_or_404(Vehicle, vin_code=self.kwargs["vin_code"])
-        return {
-            "vehicle": vehicle,
-            "work_date": timezone.now().strftime("%Y-%m-%d"),
-            "mileage": vehicle.vehicle_mileage,
+        initial = super().get_initial()
+        vehicle_instance = get_object_or_404(
+            Vehicle, vin_code=self.kwargs['vin_code']
+        )
+        update_data = {
+            'vehicle': vehicle_instance,
+            'work_date': timezone.now().strftime('%Y-%m-%d'),
+            'mileage': vehicle_instance.vehicle_mileage,
         }
+        initial.update(update_data)
+
+        return initial
 
 
 class CurrentEventCreateView(EventCreateView):
@@ -200,6 +207,11 @@ class EventDeleteView(
 class EventListView(LoginRequiredMixin, TitleMixin, ListView):
     model = Event
     title = "Events list"
+
+    def get_queryset(self) -> QuerySet[Any]:
+        return super().get_queryset().filter(
+            vehicle__vin_code=self.kwargs['vin_code']
+        )
 
 
 class EventListByTypeView(LoginRequiredMixin, TitleMixin, ListView):

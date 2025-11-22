@@ -8,6 +8,13 @@ class DateInput(forms.DateInput):
 
 
 class EventForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        vehicle_instance = kwargs['initial'].get('vehicle')
+        super(EventForm, self).__init__(*args, **kwargs)
+        self.fields['work'].queryset = Work.objects.filter(
+            vehicle=vehicle_instance
+        )
+
     class Meta:
         model = Event
         fields = '__all__'

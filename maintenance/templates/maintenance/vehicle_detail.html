@@ -100,7 +100,7 @@
   </div>
   <div class="row row-cols-1 row-cols-md-3 justify-content-md-center">
     <div class="col col-md-2 col-sm-auto text-center p-1">
-      <a href="{% url 'events_list' %}?next={{request.path}}" class="btn btn-outline-success btn-sm"><i class="fa-solid fa-book"></i> See all events list</a>
+      <a href="{% url 'events_list' vin_code=object.vin_code %}?next={{request.path}}" class="btn btn-outline-success btn-sm"><i class="fa-solid fa-book"></i> See all events list</a>
     </div>
     <div class="col col-md-2 col-sm-auto text-center p-1">
       <a href="{% url 'list_of_works' vin_code=object.vin_code %}" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-screwdriver-wrench"></i> List of works</a>
