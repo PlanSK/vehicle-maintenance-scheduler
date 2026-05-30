@@ -1,49 +1,53 @@
-# Construct builder
-
-FROM python:3.10.6-alpine as builder
+# === Stage 1: Build Dependencies (Builder) ===
+FROM python:3.12-alpine AS builder
 
 WORKDIR /usr/src/webapp
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-RUN apk update \
-    && apk add --virtual build-deps gcc python3-dev musl-dev \
-    && apk add --no-cache mariadb-dev
-RUN pip install --upgrade pip
+# Install system dependencies required for building Python packages
+RUN apk add --no-cache gcc python3-dev musl-dev mariadb-dev
 
+RUN pip install --no-cache-dir --upgrade pip
+
+# Copy ONLY requirements.txt to maximize Docker layer caching
 COPY ./requirements.txt .
-RUN pip install -r requirements.txt
-COPY . .
+
+# Build wheels (compiled once and cached)
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/webapp/wheels -r requirements.txt
-RUN apk del build-deps && rm -rf /var/cache/apk/*
 
-# Construct production
-FROM python:3.10.6-alpine
 
-RUN mkdir /home/implementer
+# === Stage 2: Final Production Image ===
+FROM python:3.12-alpine
+
+# Create a system group and user in a single command
 RUN addgroup -S implementer && adduser -S implementer -G implementer
 
 ENV HOME=/home/implementer
 ENV APP_HOME=/home/implementer/web
-RUN mkdir $APP_HOME
-RUN mkdir $APP_HOME/staticfiles
-RUN mkdir $APP_HOME/mediafiles
-RUN mkdir $APP_HOME/db
+
+# Create all required directories in a single command
+RUN mkdir -p $APP_HOME/staticfiles $APP_HOME/mediafiles $APP_HOME/db
 WORKDIR $APP_HOME
 
-RUN apk update && apk add --no-cache mariadb-connector-c-dev
+# Install only the runtime client package required for MariaDB/MySQL
+RUN apk add --no-cache mariadb-connector-c-dev
+
+# Copy wheels from the builder stage and install them
 COPY --from=builder /usr/src/webapp/wheels /wheels
-COPY --from=builder /usr/src/webapp/requirements.txt .
-RUN pip install --no-cache /wheels/*
-RUN rm -rf /var/cache/apk/*
+RUN pip install --no-cache-dir /wheels/* && rm -rf /wheels
 
+# Copy and configure entrypoint before copying the source code to preserve cache
 COPY ./entrypoint.sh .
-RUN sed -i 's/\r$//g' $APP_HOME/entrypoint.sh
-RUN chmod +x $APP_HOME/entrypoint.sh
+RUN sed -i 's/\r$//g' entrypoint.sh && chmod +x entrypoint.sh
 
+# Copy the project source code
 COPY . $APP_HOME
+
+# Change ownership of the application directory to the non-root user
 RUN chown -R implementer:implementer $APP_HOME
+
 USER implementer
 
-ENTRYPOINT ["/home/implementer/web/entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
